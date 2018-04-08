@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ldg.movie">
+	<cache />
+	
+	<!-- <select id="search_movieNmWithName" parameterType="hashmap" resultType="Movie">
+
+		select * from movie where movieNm like '%' || #{movieNm} || '%' 
+
+	</select>
+	 -->
+	
+	<!-- <select id="search_movieNmWithEnd" parameterType="hashmap" resultType="Movie">
+		select * from movie where prdtyear <= #{endPrdt}
+	</select> -->
+	
+	<!-- <select id="search_movieNmWithStartAndEnd" parameterType="hashmap" resultType="Movie">
+		select * from movie where prdtyear <= #{endPrdt} and prdtyear >= #{startPrdt}
+	
+	</select> -->
+	
+<!-- 	<select id="search_movieNmWithGenre" parameterType="hashmap" resultType="Movie">
+	나는 put("genre",genre)
+		select * from movie where genre in 
+		<foreach collection="genre" item="genre"  open="(" close=")" separator=",">
+			#{genre}
+		</foreach>
+	
+	</select>
+	
+	<select id="search_movieNmWithNation" parameterType="hashmap" resultType="Movie">
+	나는 put("genre",genre)
+		select * from movie where nations in 
+		<foreach collection="nations" item="nations"  open="(" close=")" separator=",">
+			#{nations}
+		</foreach>
+	
+	</select>
+	
+	<select id="search_movieNmWithGrade" parameterType="hashmap" resultType="Movie">
+	나는 put("genre",genre)
+		select * from movie where nations in 
+		<foreach collection="grade" item="grade"  open="(" close=")" separator=",">
+			#{grade}
+		</foreach>
+	
+	</select> -->
+	
+	<select id="search_movieNmWithAllNoName" parameterType="hashmap" resultType="Movie">
+	<!-- 나는 put("genre",genre) -->
+		select * from movie where (nations in 
+		<foreach collection="nations" item="nations"  open="(" close=")" separator=",">
+			#{nations}
+		</foreach>
+		and genre in
+		<foreach collection="genre" item="genre"  open="(" close=")" separator=",">
+			#{genre}
+		</foreach>
+		and grade in
+		<foreach collection="grade" item="grade"  open="(" close=")" separator=",">
+			#{grade}
+		</foreach>
+		 ) and ( prdtyear between #{startPrdt} and #{endPrdt})		
+	</select>
+	
+	<select id="search_movieNmWithMovie" parameterType="hashmap" resultType="Movie">
+	<!-- 나는 put("genre",genre) -->
+		select * from movie where ( nations in 
+		<foreach collection="nations" item="nations"  open="(" close=")" separator=",">
+			#{nations}
+		</foreach>
+		and genre in
+		<foreach collection="genre" item="genre"  open="(" close=")" separator=",">
+			#{genre}
+		</foreach>
+		and grade in
+		<foreach collection="grade" item="grade"  open="(" close=")" separator=",">
+			#{grade}
+		</foreach>
+		 ) and ( prdtyear between #{startPrdt} and #{endPrdt})	
+		 and movieNm like '%' || #{movieNm} || '%' 	
+	</select>
+	
+	
+	<select id="search_movieNmWithDirector" parameterType="hashmap" resultType="Movie">
+	<!-- 나는 put("genre",genre) -->
+		select * from movie where ( nations in 
+		<foreach collection="nations" item="nations"  open="(" close=")" separator=",">
+			#{nations}
+		</foreach>
+		and genre in
+		<foreach collection="genre" item="genre"  open="(" close=")" separator=",">
+			#{genre}
+		</foreach>
+		and grade in
+		<foreach collection="grade" item="grade"  open="(" close=")" separator=",">
+			#{grade}
+		</foreach>
+		 ) and ( prdtyear between #{startPrdt} and #{endPrdt})	
+		 and directors = #{directors}
+	</select>
+	
+	
+	
+	
+	<!-- <select id="search_movieNmWithStart" parameterType="hashmap" resultType="Movie">
+	나는 put("genre",genre)
+		select * from movie where prdtyear >= #{startPrdt}
+	</select>
+	
+	<select id="search_movieNmWithEnd" parameterType="hashmap" resultType="Movie">
+	<![CDATA[
+		select * from movie where prdtyear <= #{endPrdt}
+	]]>
+	</select>
+	
+	<select id="search_movieNmWithStartAndEnd" parameterType="hashmap" resultType="Movie">
+	나는 put("genre",genre)
+	<![CDATA[
+		select * from movie where prdtyear >= #{startPrdt} and prdtyear <= #{endPrdt}
+	]]>
+	</select>
+	 -->
+	
+	
+	
+</mapper>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ldg.vip">
+   <cache />
+   <select id="getArticleCount" resultType="int" parameterType="hashmap">
+      select count(*) from vip_FAQ
+      <if test="title != null">
+         WHERE title = #{title}
+      </if>
+   </select>
+
+   <select id="getArticles" resultType="VipFaq" parameterType="hashmap">
+		SELECT b.*
+		FROM  (
+		 SELECT  ROWNUM rnum,  a.*
+		  FROM  (
+		   SELECT  num, title, reader
+		    FROM vip_FAQ ) a  ) b
+		WHERE b.rnum BETWEEN #{start} AND #{end}
+   </select>
+   
+  <select id="getArticle" resultType="VipFaq" parameterType="hashmap">
+      select
+      * from vip_FAQ where title = #{title}
+   </select> 
+  
+
+	
+</mapper>

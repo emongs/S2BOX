@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ldg.wish_list">
+	<cache />
+	
+	<insert id="insert_WishList" parameterType="hashmap">
+		insert into wish_list 
+		values (#{id},#{movie_name})
+	</insert>
+	<delete id="delete_WishList" parameterType="hashmap">
+		delete from wish_list 
+		where id = #{id} and MOVIE_NAME = #{movie_name}
+	</delete>
+	
+	<select id="getMovieNames" parameterType="hashmap" resultType="string">
+		select movie_name from wish_list 
+		where id = #{id}
+	</select>
+	
+	
+</mapper>

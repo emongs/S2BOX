@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ldg.reserve">
+	<cache />
+
+	<!-- screencode목록조회 -->
+	<select id="loadScreenCode" resultType="Screen">
+		select screen_name,screen_code from screen
+	</select>
+	<!-- 영화제목 div 용 articleList -->
+	<select id="movieDivList" resultType="Moviediv">
+		select distinct
+		movie_name,grade from s2box_movie where to_char(screen_date,
+		'yyyymmdd' ) >= to_char( sysdate, 'yyyymmdd')
+	</select>
+	<select id="movieListByTheater" parameterType="hashmap" resultType="Moviediv">
+		select distinct
+		movie_name,grade from s2box_movie where to_char(screen_date,
+		'yyyymmdd' ) >= to_char( sysdate, 'yyyymmdd')
+		<if test="theater_name != null">
+		and	theater_name = #{theater_name}
+		</if>
+	</select>
+	<select id="movieDivByDateAndTheater" parameterType="hashmap" resultType="Moviediv">
+		select distinct
+		movie_name,grade from s2box_movie where to_char(screen_date,
+		'yyyymmdd' ) >= to_char( sysdate, 'yyyymmdd')
+		<if test="theater_name != null and screen_date!=null">
+		and	theater_name = #{theater_name} and screen_date=#{screen_date}
+		</if>
+	</select>
+	<select id="loadMovieBydate" parameterType="hashmap" resultType="Moviediv">
+		select distinct
+		movie_name,grade from s2box_movie where to_char(screen_date,
+		'yyyymmdd' ) >= to_char( sysdate, 'yyyymmdd')
+		<if test="screen_date!=null">
+		and screen_date=#{screen_date}
+		</if>
+	</select>
+	
+	
+	<!-- 영화관 div 용 articleList -->
+	<select id="theaterDivList" resultType="Local">
+		select distinct
+		local,theater_name from s2box_movie where to_char(screen_date,
+		'yyyymmdd' ) >= to_char( sysdate, 'yyyymmdd')
+	</select>
+	<select id="loadLocalBydate" parameterType="hashmap" resultType="Local">
+		select distinct
+		local,theater_name from s2box_movie where to_char(screen_date,
+		'yyyymmdd' ) >= to_char( sysdate, 'yyyymmdd')
+		<if test="screen_date!=null">
+		and screen_date=#{screen_date}
+		</if>
+	</select>
+	<select id="theaterByDateAndMovie" parameterType="hashmap" resultType="Local">
+		select distinct
+		local,theater_name from s2box_movie 
+		<if test="movieName!=null and screen_date!=null">
+		where movie_name=#{movieName} and screen_date=#{screen_date}
+		</if>
+	</select>
+
+	<!-- 영화관 div 용 articleList -->
+	<select id="dateDivList" resultType="Datediv">
+		select distinct screen_date from s2box_movie where to_char(screen_date,
+		'yyyymmdd' ) >= to_char( sysdate, 'yyyymmdd') order by screen_date
+	</select>
+	<!-- ********************************************************************************************************************************** -->
+	<!-- 영화관 div 용 articleList -->
+	<select id="localListByMovie" parameterType="hashmap"
+		resultType="Local">
+		select distinct local,theater_name from s2box_movie
+		 <if test="movie_name != null">
+			where movie_name=#{movie_name}
+		</if>
+		 
+
+	</select>
+	<!-- 날짜 div 용 articleList -->
+	<select id="dateListByMovie" parameterType="hashmap" resultType="Datediv">
+		select distinct screen_date from s2box_movie where
+		to_char(screen_date, 'yyyymmdd' ) >= to_char( sysdate, 'yyyymmdd') 
+		<if test="movie_name == null">
+		order by screen_date
+		</if>
+		<if test="movie_name != null">
+		and	movie_name = #{movie_name} order by screen_date
+		</if>
+	</select>
+	<select id="dateListByTheater" parameterType="hashmap" resultType="Datediv">
+		select distinct screen_date from s2box_movie where
+		to_char(screen_date, 'yyyymmdd' ) >= to_char( sysdate, 'yyyymmdd') 
+		<if test="theater_name == null or movie_name==null">
+		order by screen_date
+		</if>
+		<if test="theater_name != null and movie_name!=null">
+		and	theater_name = #{theater_name} and movie_name=#{movie_name} order by screen_date
+		</if>
+	</select>
+	<select id="dateListByTheater1" parameterType="hashmap" resultType="Datediv">
+		select distinct screen_date from s2box_movie where
+		to_char(screen_date, 'yyyymmdd' ) >= to_char( sysdate, 'yyyymmdd') 
+		<if test="theater_name == null">
+		order by screen_date
+		</if>
+		<if test="theater_name != null">
+		and	theater_name = #{theater_name} order by screen_date
+		</if>
+	</select>
+	<!-- 3단계진행 -->
+	<select id="clickDateLevel3" parameterType="hashmap" resultType="Sbox">
+		select * from s2box_movie 
+		<if test="theater_name == null or movie_name==null or screen_date==null">
+		order by screen_date
+		</if>
+		<if test="theater_name != null and movie_name!=null and screen_date!=null">
+		where theater_name = #{theater_name} and movie_name = #{movie_name} and screen_date = #{screen_date}
+		</if>
+	</select>
+	<select id="forSortTimeDiv" parameterType="hashmap" resultType="Sbox">
+		select distinct screen_code from s2box_movie 
+		<if test="theater_name == null or movie_name==null or screen_date==null">
+		order by screen_date
+		</if>
+		<if test="theater_name != null and movie_name!=null and screen_date!=null">
+		where theater_name = #{theater_name} and movie_name = #{movie_name} and screen_date = #{screen_date}
+		</if>
+	</select>
+	<!-- 스타일 반환 -->
+	<select id="getScreenStyle" parameterType="hashmap" resultType="string">
+		select style_name from style 
+		<if test="screen_code!=null">
+		where style_code=(select style_code from screen where screen_code = #{screen_code})
+		</if> 
+	</select>
+	<select id="getSheetID" parameterType="hashmap" resultType="Sbox">
+		select * from s2box_movie
+		<if test="movie_name != null and theater_name!=null and screen_date!=null and start_hour !=null and start_min !=null and screen_code !=null">
+		where movie_name = #{movie_name} and theater_name = #{theater_name} and screen_date = #{screen_date} and start_hour =#{start_hour} and start_min=#{start_min} and screen_code=#{screen_code}
+		</if>
+	</select>
+</mapper>

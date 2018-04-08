@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ldg.currentMovie">
+	<cache />
+
+	
+	<select id="getLikeCount" resultType="int" parameterType = "hashmap">
+	<!-- 나는 put("genre",genre) -->
+		select likecount from current_movie 
+		<where>
+			<if test='movie_name!= null and movie_name != ""'>
+				movie_name = #{movie_name}
+			</if>
+		</where>
+	</select>
+	
+	
+	<update id="increase_like" parameterType="hashmap">
+
+		update current_movie set
+		likecount = likecount + 1 where movie_name = #{movie_name}
+
+	</update>
+	
+	<update id="decrease_like" parameterType="hashmap">
+
+		update current_movie set
+		likecount = likecount - 1 where movie_name = #{movie_name}
+
+	</update>
+	
+	
+	
+	
+	
+	<!-- <select id="search_movieNmWithStart" parameterType="hashmap" resultType="Movie">
+	나는 put("genre",genre)
+		select * from movie where prdtyear >= #{startPrdt}
+	</select>
+	
+	<select id="search_movieNmWithEnd" parameterType="hashmap" resultType="Movie">
+	<![CDATA[
+		select * from movie where prdtyear <= #{endPrdt}
+	]]>
+	</select>
+	
+	<select id="search_movieNmWithStartAndEnd" parameterType="hashmap" resultType="Movie">
+	나는 put("genre",genre)
+	<![CDATA[
+		select * from movie where prdtyear >= #{startPrdt} and prdtyear <= #{endPrdt}
+	]]>
+	</select>
+	 -->
+	
+	
+	
+</mapper>

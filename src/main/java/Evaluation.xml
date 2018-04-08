@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ldg.evaluation">
+	<cache />
+	<!-- <select id="boardList" resultType="Board" parameterType="hashmap"> 
+		select * from board <if test="num !=null"> WHERE num = #{num} </if> <if test="boardid 
+		!= null"> WHERE boardid = #{boardid} </if> </select> <select id="getArticleCount" 
+		parameterType="hashmap" resultType="int"> select count(*) from board <if 
+		test="boardid != null"> WHERE boardid = #{boardid} </if> </select> <select 
+		id="getArticles" parameterType="hashmap" resultType="Board"> select * from 
+		(select rownum rnum, a.* from(select num, writer, email, subject, passwd, 
+		reg_date, readcount, ref, re_step, re_level, content, ip, filename from board 
+		where boardid = #{boardid} order by ref desc, re_step) a) where rnum between 
+		#{start} and #{end} </select> <update id="update_readcount" parameterType="hashmap"> 
+		update board set readcount=readcount+1 where num = #{num} </update> <update 
+		id="getArticles_update" parameterType="hashmap"> update board set readcount=readcount+1 
+		where num = #{num} </update> <select id="getArticle" parameterType="hashmap" 
+		resultType="Board"> select * from board where num = #{num} </select> <select 
+		id="insertArticle_new" resultType="int"> select max(num) from board </select> 
+		<update id="insertArticle_update" parameterType="hashmap"> update board set 
+		re_step=re_step+1 where ref= #{ref} and re_step> #{re_step} </update> <insert 
+		id="insertArticle_insert" parameterType="Board"> insert into board ( num, 
+		writer,email,subject,passwd ,reg_date,readcount, ref,re_step,re_level,content,ip,filename, 
+		boardid) values (#{num},#{writer},#{email},#{subject},#{passwd},sysdate,0, 
+		#{ref},#{re_step},#{re_level},#{content},#{ip}, #{filename}, #{boardid}) 
+		</insert> <select id="update_passwd" parameterType="hashmap" resultType="string"> 
+		select passwd from board where num =#{num} </select> <update id="update_update" 
+		parameterType="hashmap"> update board set writer=#{writer}, email=#{email}, 
+		subject=#{subject}, passwd=#{passwd}, content=#{content} where num=#{num} 
+		</update> <select id="delete" parameterType="hashmap"> delete from board 
+		where num = #{num} </select> -->
+
+	<insert id="insertEvaluation" parameterType="Evaluation">
+		insert
+		into evaluation
+		(eval_id, content, id, star, reg_date, likeup,
+		likedown) values
+
+		(evaluation_sq.nextval,#{content},#{id},#{star},sysdate,0,0)
+
+	</insert>
+
+	<select id="listEvaluation" parameterType="hashmap" resultType="Evaluation">
+		select * from evaluation
+
+		<where>
+			<if test='movie_name!= null and movie_name != ""'>
+				movie_name = #{movie_name}
+			</if>
+		</where>
+
+		order by reg_date desc
+
+	</select>
+
+	<select id="sortingFavor" resultType="Evaluation" parameterType="hashmap">
+
+		select * from evaluation
+		<where>
+			<if test='movie_name!= null and movie_name !="" '>
+				movie_name = #{movie_name}
+			</if>
+		</where>
+
+
+		order by likeup desc
+
+	</select>
+
+	<select id="sortingWorstStar" resultType="Evaluation"
+		parameterType="hashmap">
+
+		select * from evaluation
+
+		<where>
+			<if test='movie_name!= null and movie_name !=""'>
+				movie_name = #{movie_name}
+			</if>
+		</where>
+
+
+		order by star
+
+	</select>
+
+	<select id="sortingBestStar" resultType="Evaluation"
+		parameterType="hashmap">
+
+		select * from evaluation
+		<where>
+			<if test='movie_name!= null and movie_name !=""'>
+				movie_name = #{movie_name}
+			</if>
+		</where>
+
+		order by star desc
+
+	</select>
+
+	<select id="totalPeople" resultType="int" parameterType="hashmap">
+		select count(id) from evaluation
+		<where>
+			<if test='movie_name!= null and movie_name !=""'>
+				movie_name = #{movie_name}
+			</if>
+		</where>
+
+	</select>
+
+	<select id="avrEval" parameterType="hashmap" resultType="double">
+		select nvl(avg(star),0) from evaluation
+		<where>
+			<if test='movie_name!= null and movie_name !=""'>
+				movie_name = #{movie_name}
+			</if>
+		</where>
+	</select>
+
+
+	<update id="updateLikeup" parameterType="hashmap">
+		update evaluation set likeup=likeup+1 where eval_id=#{eval_id}
+	</update>
+
+	<update id="updateLikedown" parameterType="hashmap">
+		update evaluation set likedown=likedown+1 where eval_id=#{eval_id}
+	</update>
+
+
+
+</mapper>
+
+<!-- resultType이 없으면 insert만 하겠다 parameterType을 안쓰면 if가 없어져야 함 map으로 num을 
+	보내면 안보내면 board에 데이터를 가져와서 resultType에 Board에 넣어라 기준이 되는게 컬럼명과 프로퍼티 명이다 프로퍼티의 
+	변수명과 Board의 컬럼명과 같아야한다 view에 있는 form의 내용과 setter getter 네임이 다 같게 -->

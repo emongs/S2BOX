@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	id="WebApp_ID" version="3.0">
+	
+		<display-name>S2_BOX</display-name>
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+		<welcome-file>index.htm</welcome-file>
+		<welcome-file>index.jsp</welcome-file>
+		<welcome-file>default.html</welcome-file>
+		<welcome-file>default.htm</welcome-file>
+		<welcome-file>default.jsp</welcome-file>
+	</welcome-file-list>
+	
+	<jsp-config>
+
+	 	<jsp-property-group>
+			<url-pattern>/view/board/*</url-pattern>
+			<url-pattern>/view/main/*</url-pattern>
+			<url-pattern>/view/member/*</url-pattern>
+			<url-pattern>/view/news/*</url-pattern>
+			<url-pattern>/view/ticketing/*</url-pattern>
+			<url-pattern>/view/vip/*</url-pattern>
+			<url-pattern>/view/evaluation/*</url-pattern>
+			<url-pattern>/view/movie/*</url-pattern>
+			<url-pattern>/view/reservation/*</url-pattern>
+			<url-pattern>/view/menu/*</url-pattern>
+			<include-prelude>/WEB-INF/common/header.jsp</include-prelude>
+			<include-coda>/WEB-INF/common/footer.jsp</include-coda>
+		</jsp-property-group> 
+
+		<jsp-property-group>
+			<url-pattern>/view/board/*</url-pattern>
+			<include-prelude>/WEB-INF/common/Menubar.jsp</include-prelude>
+		</jsp-property-group>
+		
+		<jsp-property-group>
+
+<url-pattern>/view/member/myPage.jsp</url-pattern>
+
+<url-pattern>/view/member/updateForm1.jsp</url-pattern>
+
+<url-pattern>/view/member/Myinfo.jsp</url-pattern>
+
+<url-pattern>/view/member/deleteForm.jsp</url-pattern>
+
+<include-prelude>/WEB-INF/common/Mypage_top_side_Bar.jsp</include-prelude>
+
+</jsp-property-group>
+
+		<!-- <jsp-property-group> <url-pattern>/view2/member/myPage.jsp</url-pattern> 
+			<url-pattern>/view2/member/deleteForm.jsp</url-pattern> <url-pattern>/view2/member/Myinfo.jsp</url-pattern> 
+			<url-pattern>/view2/member/updateForm1.jsp</url-pattern> <include-prelude>/WEB-INF/common/topBar.jsp</include-prelude> 
+			</jsp-property-group> -->
+
+		<jsp-property-group>
+			<url-pattern>/view/board/*</url-pattern>
+			<include-prelude>/WEB-INF/common/head.jsp</include-prelude>
+		</jsp-property-group>
+
+	</jsp-config>
+
+
+	<servlet>
+		<servlet-name>springMybatis</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>springMybatis</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>default</servlet-name>
+		<url-pattern>*.js</url-pattern>
+		<url-pattern>*.css</url-pattern>
+		<url-pattern>*.jpg</url-pattern>
+		<url-pattern>*.gif</url-pattern>
+		<url-pattern>*.png</url-pattern>
+		<url-pattern>*.ico</url-pattern>
+		<url-pattern>*.swf</url-pattern>
+	</servlet-mapping>
+
+	<filter>
+
+		<filter-name>encodingFilter</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>encodingFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+
+
+</web-app>

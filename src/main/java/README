@@ -1,0 +1,421 @@
+
+API 데이터 형식
+---------------------------------------------------
+현재 영화 리스트 (MovieList) => 영화이름, 감독이름으로 영화에 접근할때 여기서 코드값을 받은다음 뭐라도 할듯.
+
+파라미터 : 현재페이지,아이템페이지,무비넴,디렉터넴,.....
+사용하는 Method : String getMoiveList(~~~~~)
+HashMap(String, Object) res = mapper.readValue(getMovieList(~~)'s return value,HashMap.class)
+
+나오는 형식
+{
+	"movieListResult" :
+	{
+	 		"totCnt" : 123456,
+	 		"source" : 영진위,b
+	 		"movieList" : 
+	 		[
+	 			{
+	 				"movieCd" : 123456,
+					"movieNm" : asdf,
+	 				"moiveNmEn" : qwer.
+					......
+	 			}
+			]
+	}
+ }
+ 
+ 영화리스트 각 값의 접근하는방법(영화코드, 영화이름, 감독, 장르 등등...) 
+	<c:if test = "${not empty showResult.movieListResult.movieList }">
+		<c:forEach items = "${ showResult.movieListResult.movieList  }" var="boxoffice">
+			<tr>
+				<td><c:out value = "${boxoffice.moiveCd }"></c:out></td>
+				<td><c:out value = "${boxoffice.movieNm }"></c:out></td>
+				<td><c:out value = "${boxoffice.moiveNmEn }"></c:out></td>
+				<td><c:out value = "${boxoffice.prdtYear }"></c:out></td>
+				<td><c:out value = "${boxoffice.openDt }"></c:out></td>
+				<td><c:out value = "${boxoffice.typeNm }"></c:out></td>
+				<td><c:out value = "${boxoffice.prdtStatNm }"></c:out></td>
+				<td><c:out value = "${boxoffice.nationAlt }"></c:out></td>
+				<td><c:out value = "${boxoffice.genreAlt }"></c:out></td>
+				<td><c:out value = "${boxoffice.repNationNm }"></c:out></td>
+				<td><c:out value = "${boxoffice.repGenreNm }"></c:out></td>
+				<td><c:out value = "${boxoffice.directors }"></c:out></td>
+				<td><c:out value = "${boxoffice.peopleNm }"></c:out></td>
+				<td><c:out value = "${boxoffice.companys }"></c:out></td>
+				<td><c:out value = "${boxoffice.companyCd }"></c:out></td>
+				<td><c:out value = "${boxoffice.companyNm }"></c:out></td>
+			</tr>
+		</c:forEach>
+	</c:if>
+ ----------------------------------------------------------
+ 
+영화배우 리스트 (PeopleList)  => 영화배우이름으로 배우리스트를 접근할때
+파라미터: 사람이름, 등등등
+사용하는 Method : String getPeopleList(~~~~~)
+HashMap(String, Object) res = mapper.readValue(getPeopleList(~~)'s return value,HashMap.class)
+
+나오는 형식
+{
+	"PeopleListResult" :
+	{
+	 		"totCnt" : 123456,
+	 		"peopleList" : 
+	 		[
+	 			{
+		 			"peopleCd": "20186678",
+	                "peopleNm": "전혜림",
+	                "peopleNmEn": "JEON Haelim",
+	                "repRoleNm": "스크립터",
+	                "filmoNames": "오늘, 내일을 보다|성난 화가|마이 보이|더 파이브"
+                },
+                {
+                    "peopleCd": "10037744",
+                    "peopleNm": "잔나 이사바예바",
+                    "peopleNmEn": "Zhanna Issabayeva",
+                    "repRoleNm": "감독",
+                    "filmoNames": "스베타"
+                },
+                .......
+			]
+	}
+ }
+ 
+ 		Object peopleListResult = peopleInfo.get("peopleListResult");
+		// 키값이 poepleListResult인 객체를 따로 저장
+		String peopleListResult_StrToJsonFormat = mapper.writeValueAsString(peopleListResult); // kkk는
+																								// PeopleListResult를
+																								// json형식으로
+																								// 담아놓은
+																								// String
+		// System.out.println("peopleListResult_StrToJsonFormat : " +
+		// peopleListResult_StrToJsonFormat);
+
+		JSONParser jsonParser = new JSONParser();
+		JSONObject jsonPeopleListResult = (JSONObject) jsonParser.parse(peopleListResult_StrToJsonFormat);
+		// json 형식으로 담아놓은 String을 다시 Json형식으로 parsing
+
+		// json형식에서 원하는배열을 추출 (peopleList)
+		JSONArray peopleList = (JSONArray) jsonPeopleListResult.get("peopleList");
+
+		// ***********************************************
+		// peopleCdList.get("repRoleNm") => "배우", "감독" 이 사람들만 추가하기
+		// ***********************************************
+		for (int i = 0; i < peopleList.size(); i++) {
+			JSONObject peopleCdList = (JSONObject) peopleList.get(i);
+			// peopleList에서 나온 각각의 object를 담는 JSONObject를 추출
+			peopleCdListRes.add((String) peopleCdList.get("peopleCd"));
+		}
+ 
+ 인물리스트 각 값의 접근하는방법(인물코드, 인물이름, 역할, 필모그래피 등등...) 
+ in JSTL
+ 
+ <c:if test = "${not empty peopleInfo.peopleListResult.peopleList }">
+	<c:forEach items = "${ peopleInfo.peopleListResult.peopleList  }" var="peopleList">
+		<tr>
+			<td><c:out value = "${peopleList.peopleCd }"></c:out></td>
+			<td><c:out value = "${peopleList.peopleNm }"></c:out></td>
+			<td><c:out value = "${peopleList.peopleNmEn }"></c:out></td>
+			<td><c:out value = "${peopleList.repRoleNm }"></c:out></td>
+			<td><c:out value = "${peopleList.filmoNames }"></c:out></td>
+		</tr>
+	</c:forEach>
+ </c:if>
+ 
+ 
+ ----------------------------------------------------------------------------
+ 
+ 인물 상세정보 (PeopleInfo)
+파라미터 : 피플코드
+사용하는 Method : String getPeopleInfo(~~~~~)
+HashMap(String, Object) res = mapper.readValue(getPeoleInfo(~~)'s return value,HashMap.class)
+
+나오는 형식
+  {
+                    "peopleInfoResult":
+                    {
+                        "peopleInfo":
+                        {
+                            "peopleCd": "10015500",
+                            "peopleNm": "레이첼 맥아담스",
+                            "peopleNmEn": "Rachel McAdams ",
+                            "sex": "여자",
+                            "repRoleNm": "배우",
+                            "homepages": [],
+                            "filmos": [
+                            {
+                                "movieCd": "20163181",
+                                "movieNm": "닥터 스트레인지",
+                                "moviePartNm": "배우"
+                            },
+                            {
+                                "movieCd": "20150565",
+                                "movieNm": "스포트라이트",
+                                "moviePartNm": "배우"
+                            },
+                            {
+                                "movieCd": "20158883",
+                                "movieNm": "에브리띵 윌 비 파인",
+                                "moviePartNm": "배우"
+                            },
+                            {
+                                "movieCd": "20155563",
+                                "movieNm": "어린왕자",
+                                "moviePartNm": "배우"
+                            },
+                            {
+                                "movieCd": "20153083",
+                                "movieNm": "사우스포",
+                                "moviePartNm": "배우"
+                            },
+                            {
+                                "movieCd": "20157936",
+                                "movieNm": "알로하",
+                                "moviePartNm": "배우"
+                            },
+                            {
+                                "movieCd": "20149520",
+                                "movieNm": "모스트 원티드 맨",
+                                "moviePartNm": "배우"
+                            },
+                            {
+                                "movieCd": "20135428",
+                                "movieNm": "어바웃 타임",
+                                "moviePartNm": "배우"
+                            },
+                            {
+                                "movieCd": "20136296",
+                                "movieNm": "투 더 원더",
+                                "moviePartNm": "배우"
+                            },
+                            {
+                                "movieCd": "20130541",
+                                "movieNm": "패션, 위험한 열정",
+                                "moviePartNm": "배우"
+                            },
+                            {
+                                "movieCd": "20126686",
+                                "movieNm": "미드나잇 인 파리",
+                                "moviePartNm": "배우"
+                            },
+                            {
+                                "movieCd": "20124874",
+                                "movieNm": "서약",
+                                "moviePartNm": "배우"
+                            },
+                            {
+                                "movieCd": "20119667",
+                                "movieNm": "굿모닝 에브리원",
+                                "moviePartNm": "배우"
+                            },
+                            {
+                                "movieCd": "20090664",
+                                "movieNm": "시간 여행자의 아내",
+                                "moviePartNm": "배우"
+                            },
+                            {
+                                "movieCd": "20090214",
+                                "movieNm": "스테이트 오브 플레이",
+                                "moviePartNm": "배우"
+                            },
+                            {
+                                "movieCd": "20088409",
+                                "movieNm": "럭키 원스",
+                                "moviePartNm": "배우"
+                            },
+                            {
+                                "movieCd": "20050331",
+                                "movieNm": "우리, 사랑해도 되나요?",
+                                "moviePartNm": "배우"
+                            },
+                            {
+                                "movieCd": "20050221",
+                                "movieNm": "나이트 플라이트",
+                                "moviePartNm": "배우"
+                            },
+                            {
+                                "movieCd": "20040734",
+                                "movieNm": "노트북",
+                                "moviePartNm": "배우"
+                            },
+                            {
+                                "movieCd": "20040581",
+                                "movieNm": "퀸카로 살아남는 법",
+                                "moviePartNm": "배우"
+                            }]
+                        },
+                        "source": "영화진흥위원회"
+                    }
+                }
+ 
+ 인물상세정보 각 값의 접근하는방법(인물코드, 인물이름, 인물이름, 역할, 성별, 필모 등등...) 
+	<c:if test = "${not empty peopleDetailInfo.peopleInfoResult.peopleInfo }">
+			<tr>
+				<td><c:out value = "${peopleDetailInfo.peopleInfoResult.peopleInfo.peopleCd }"></c:out></td>
+				<td><c:out value = "${peopleDetailInfo.peopleInfoResult.peopleInfo.peopleNm }"></c:out></td>
+				<td><c:out value = "${peopleDetailInfo.peopleInfoResult.peopleInfo.peopleNmEn }"></c:out></td>
+				<td><c:out value = "${peopleDetailInfo.peopleInfoResult.peopleInfo.sex }"></c:out></td>
+				<td><c:out value = "${peopleDetailInfo.peopleInfoResult.peopleInfo.repRoleNm }"></c:out></td>
+				<td><c:out value = "${peopleDetailInfo.peopleInfoResult.peopleInfo.homepages }"></c:out></td>
+				
+				
+				<td>
+				<c:forEach var = "i" begin="1" end="${peopleDetailInfo.peopleInfoResult.peopleInfo.filmos.size() }" >
+				<c:out value = "${peopleDetailInfo.peopleInfoResult.peopleInfo.filmos[i].movieCd }"></c:out><br>
+				</c:forEach>
+				</td>				
+				
+				<td>
+				<c:forEach var = "i" begin="1" end="${peopleDetailInfo.peopleInfoResult.peopleInfo.filmos.size() }" >
+				<c:out value = "${peopleDetailInfo.peopleInfoResult.peopleInfo.filmos[i].movieNm }"></c:out><br>
+				</c:forEach>
+				</td>				
+				
+				<td>
+				<c:forEach var = "i" begin="1" end="${peopleDetailInfo.peopleInfoResult.peopleInfo.filmos.size() }" >
+				<c:out value = "${peopleDetailInfo.peopleInfoResult.peopleInfo.filmos[i].moviePartNm }"></c:out><br>
+				</c:forEach>
+				</td>	
+		</c:if>
+ ------------------------------------------------------------------
+ 
+ 
+ 영화 상세정보 (MovieInfo)
+파라미터 : 영화코드
+사용하는 Method : String getMoiveInfo(~~~~~)
+HashMap(String, Object) res = mapper.readValue(getMovieInfo(~~)'s return value,HashMap.class)
+
+나오는 형식
+{
+    "movieInfoResult":
+    {
+        "movieInfo":
+        {
+            "movieCd": "20155874",
+            "movieNm": "미라클 벨리에",
+            "movieNmEn": "La Famille Belier",
+            "movieNmOg": "",
+            "showTm": "105",
+            "prdtYear": "2014",
+            "openDt": "20150827",
+            "prdtStatNm": "개봉",
+            "typeNm": "장편",
+            "nations": [
+            {
+                "nationNm": "프랑스"
+            }],
+            "genres": [
+            {
+                "genreNm": "드라마"
+            }],
+            "directors": [
+            {
+                "peopleNm": "에릭 라티고",
+                "peopleNmEn": "Eric Lartigau"
+            }],
+            "actors": [
+            {
+                "peopleNm": "로앤 에머라",
+                "peopleNmEn": "Louane Emera",
+                "cast": "",
+                "castEn": ""
+            },
+            {
+                "peopleNm": "카린 비아르",
+                "peopleNmEn": "Karin Viard",
+                "cast": "",
+                "castEn": ""
+            },
+            {
+                "peopleNm": "프랑소아 다미앙",
+                "peopleNmEn": "Francois Damiens",
+                "cast": "",
+                "castEn": ""
+            },
+            {
+                "peopleNm": "에릭 엘모스니노",
+                "peopleNmEn": "Eric Elmosnino",
+                "cast": "",
+                "castEn": ""
+            }],
+            "showTypes": [
+            {
+                "showTypeGroupNm": "필름",
+                "showTypeNm": "필름"
+            },
+            {
+                "showTypeGroupNm": "2D",
+                "showTypeNm": "디지털"
+            },
+            {
+                "showTypeGroupNm": "2D",
+                "showTypeNm": "디지털 배리어프리"
+            }],
+            "companys": [
+            {
+                "companyCd": "20100631",
+                "companyNm": "(주)영화사 진진",
+                "companyNmEn": "JINJIN Pictures",
+                "companyPartNm": "배급사"
+            },
+            {
+                "companyCd": "20100631",
+                "companyNm": "(주)영화사 진진",
+                "companyNmEn": "JINJIN Pictures",
+                "companyPartNm": "수입사"
+            },
+            {
+                "companyCd": "20062385",
+                "companyNm": "(주)나인플래너스",
+                "companyNmEn": "NINEPLANNERS",
+                "companyPartNm": "공동제공"
+            }],
+            "audits": [
+            {
+                "auditNo": "2015-MF00642 ",
+                "watchGradeNm": "12세이상관람가"
+            }],
+            "staffs": []
+        },
+        "source": "영화진흥위원회"
+    }
+}
+ 
+ 영화상세정보 각 값의 접근하는방법(영화코드, 영화이름, 배우이름, 배우역할 등등...) 
+	<c:if test = "${not empty  showMovieInfoResult.movieInfoResult.movieInfo}">
+			<tr>
+				<td><c:out value = "${showMovieInfoResult.movieInfoResult.movieInfo.movieCd }"></c:out></td>
+				<td><c:out value = "${showMovieInfoResult.movieInfoResult.movieInfo.movieNm }"></c:out></td>
+				<td><c:out value = "${showMovieInfoResult.movieInfoResult.movieInfo.movieNmEn }"></c:out></td>
+				<td><c:out value = "${showMovieInfoResult.movieInfoResult.movieInfo.prdtYear }"></c:out></td>
+				<td><c:out value = "${showMovieInfoResult.movieInfoResult.movieInfo.showTm }"></c:out></td>
+				<td><c:out value = "${showMovieInfoResult.movieInfoResult.movieInfo.openDt }"></c:out></td>
+				<td><c:out value = "${showMovieInfoResult.movieInfoResult.movieInfo.prdtStatNm }"></c:out></td>
+				<td><c:out value = "${showMovieInfoResult.movieInfoResult.movieInfo.nations[0].nationNm }"></c:out></td>
+				<td><c:out value = "${showMovieInfoResult.movieInfoResult.movieInfo.genres[0].genreNm }"></c:out></td>
+				<td><c:out value = "${showMovieInfoResult.movieInfoResult.movieInfo.directors[0].peopleNm }"></c:out></td>
+				<td><c:out value = "${showMovieInfoResult.movieInfoResult.movieInfo.directors[0].peopleNmEn }"></c:out></td>
+				<td><c:out value = "${showMovieInfoResult.movieInfoResult.movieInfo.actors[0].peopleNm }"></c:out></td>
+				<td><c:out value = "${showMovieInfoResult.movieInfoResult.movieInfo.actors[0].peopleNmEn }"></c:out></td>
+				<td><c:out value = "${showMovieInfoResult.movieInfoResult.movieInfo.actors[0].cast }"></c:out></td>
+			</tr>
+	</c:if>
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 

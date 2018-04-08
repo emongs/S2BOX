@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+ <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ldg.member">
+	<cache />
+	<select id="confirmId" parameterType="hashmap" resultType="int">
+		select count(*) from member WHERE id=#{id}
+	</select>
+
+
+
+	<insert id="insertMember" parameterType="hashmap">
+		insert into
+		member(name, id, passwd, email, birth, mobile, nickname, filename,
+		reg_date) values
+		(
+		#{member.name}, #{member.id}, #{member.passwd}, #{member.email},
+		#{member.birth}, #{member.mobile}, #{member.nickname},
+		#{member.filename}, sysdate
+		)
+	</insert>
+
+
+	<select id="userCheck" parameterType="hashmap" resultType="string">
+		select passwd from member where id=#{id}
+	</select>
+
+	<select id="getMember" parameterType="hashmap" resultType="Member">
+		select member.id, member.name, member.zipNo1, member.zipNo2,
+		member.address1, member.address2
+		from member where id=#{id}
+	</select>
+
+	<select id="Password" parameterType="hashmap" resultType="string">
+		select
+		passwd from member where id=#{id} and name=#{name} and birth =
+		#{birth}
+	</select>
+
+
+	<select id="id" parameterType="hashmap" resultType="string">
+		select id
+		from member where name=#{name} and mobile=#{mobile}
+	</select>
+	<select id="getArticle" parameterType="hashmap" resultType="Member">
+		select * from member where id=#{id}
+	</select>
+
+	<update id="update_update" parameterType="hashmap">
+		update member set
+
+		passwd=#{passwd},
+		email=#{email},
+		birth = #{birth},
+		mobile=#{mobile}
+		where id=#{id}
+	</update>
+
+	<delete id="delete" parameterType="hashmap">
+		delete from member where id
+		=#{id}
+	</delete>
+
+	<select id="update_passwd" parameterType="hashmap" resultType="string">
+		select passwd from member where id=#{id}
+	</select>
+	
+	<update id="update_update1" parameterType="hashmap">
+		update member set
+
+		nickname=#{nickname}
+		where id=#{id}
+	</update>
+	
+	<select id="wishListInfo" parameterType="hashMap" resultType = "Movie">
+	
+	select * from movie where movieNm in 
+	(select movie_name from wish_list where id = #{id})
+	</select>
+	
+	<!-- qhrrl -->
+	<select id="getFavoriteList" parameterType="hashmap" resultType="string">
+		select favorite_theater from member 
+		<if test="memberID != null">
+		where id=#{memberID}
+		</if>
+	</select>
+	<select id="getTheaterList" resultType="Theater">
+		select theater_name from theater
+	</select>
+	
+</mapper>
